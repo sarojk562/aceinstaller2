@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AceInstaller</string>
+    <string-array name="packageNames">
+        <item name="0">com.poc.sarojkaashyap.college_poc</item>
+        <item name="1">com.erudex.mauritius.eduapp</item>
+        <item name="2">org.coolreader</item>
+        <item name="3">org.tuxpaint</item>
+        <item name="4">subreddit.android.appstore</item>
+    </string-array>
+</resources>
