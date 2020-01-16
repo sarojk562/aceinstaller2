@@ -22,17 +22,14 @@
         </activity>
 
         <activity android:name=".InstallerActivity">
-
         </activity>
 
         <activity android:name=".CopyActivity">
-
         </activity>
 
         <activity
             android:name=".AppListActivity"
             android:exported="true">
-
         </activity>
     </application>
 
