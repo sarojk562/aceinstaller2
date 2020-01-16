@@ -12,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -212,10 +214,28 @@ public class InstallerActivity extends Activity {
         List<ApkFile> apkList = ((ApkViewDataAdapter) mAdapter).getSelectedApkList();
 
         for (int i = 0; i < apkList.size(); i++) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.fromFile(new File(root.toString() + "/" + apkList.get(i).getName()));
-            intent.setDataAndType(uri, "application/vnd.android.package-archive");
-            startActivity(Intent.createChooser(intent, "Your title"));
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            Uri uri = Uri.fromFile(new File(root.toString() + "/" + apkList.get(i).getName()));
+//            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+//            startActivity(Intent.createChooser(intent, "Your title"));
+
+            File directory = Environment.getExternalStoragePublicDirectory("AceInstaller");
+
+            File file = new File(directory, apkList.get(i).getName()); // assume refers to "sdcard/myapp_folder/myapp.apk"
+
+
+            Uri fileUri = Uri.fromFile(file); //for Build.VERSION.SDK_INT <= 24
+
+            if (Build.VERSION.SDK_INT >= 24) {
+                fileUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
+            }
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, fileUri);
+            intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+            intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
+            intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //dont forget add this line
+            startActivity(intent);
         }
 
         // Make sure you only run addShortcut() once, not to create duplicate shortcuts.
