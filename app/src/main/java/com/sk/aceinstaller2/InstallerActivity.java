@@ -230,10 +230,10 @@ public class InstallerActivity extends Activity {
                 fileUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
             }
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, fileUri);
+            Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
             intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
-            intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //dont forget add this line
             startActivity(intent);
         }
