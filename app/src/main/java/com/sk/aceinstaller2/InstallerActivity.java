@@ -215,8 +215,8 @@ public class InstallerActivity extends Activity {
 
         for (int i = 0; i < apkList.size(); i++) {
             File directory = Environment.getExternalStoragePublicDirectory("AceInstaller");
-            File file = new File(directory, apkList.get(i).getName()); // assume refers to "sdcard/myapp_folder/myapp.apk"
-            Uri fileUri = Uri.fromFile(file); //for Build.VERSION.SDK_INT <= 24
+            File file = new File(directory, apkList.get(i).getName());
+            Uri fileUri = Uri.fromFile(file);
 
             if (Build.VERSION.SDK_INT >= 24) {
                 fileUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
