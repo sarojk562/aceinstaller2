@@ -91,11 +91,11 @@ public class InstallerActivity extends Activity {
 
     private void showApkList() {
 
-        root = Environment.getExternalStoragePublicDirectory("AceInstaller");
+        root = Environment.getExternalStoragePublicDirectory("AceInstallerApps");
         fileList = Utils.getApkFiles(root);
 
         if(fileList.size() < 1) {
-            Toast.makeText(mContext, "Couldn't find any apk's in default folder, Please choose a different Folder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Couldn't find any apk's in default folder.", Toast.LENGTH_SHORT).show();
 
             TextView textView = new TextView(InstallerActivity.this);
             textView.setText("No Apk's Found in this Location");
@@ -145,59 +145,6 @@ public class InstallerActivity extends Activity {
         return false;
     }
 
-    private void openDialog(View view) {
-        Intent intent = new Intent(this, FolderPicker.class);
-        startActivityForResult(intent, FOLDERPICKER_CODE);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == FOLDERPICKER_CODE && resultCode == Activity.RESULT_OK) {
-            String folderLocation = intent.getExtras().getString("data");
-            showNewApkList(folderLocation);
-        }
-    }
-
-    private void showNewApkList(String dir) {
-        root = new File(dir);
-        fileList = Utils.getApkFiles(root);
-
-        if (fileList.size() > 0) {
-            select_all.setVisibility(View.VISIBLE);
-            view.removeAllViews();
-            chooseFolder.setVisibility(View.GONE);
-        }
-
-        for (int i = 0; i < fileList.size(); i++) {
-            ApkFile apk = new ApkFile(fileList.get(i).getName(), false);
-
-            String filePath = root.toString() + "/" + fileList.get(i).getName();
-            PackageInfo packageInfo = mContext.getPackageManager().getPackageArchiveInfo(filePath, PackageManager.GET_ACTIVITIES);
-            if(packageInfo != null) {
-                ApplicationInfo appInfo = packageInfo.applicationInfo;
-                if (Build.VERSION.SDK_INT >= 8) {
-                    appInfo.sourceDir = filePath;
-                    appInfo.publicSourceDir = filePath;
-                }
-                Drawable icon = appInfo.loadIcon(mContext.getPackageManager());
-                apk.setIcon(icon);
-                if(appInstalledOrNot(appInfo.packageName)) {
-                    apk.setInstalled(true);
-                } else {
-                    apk.setInstalled(false);
-                }
-            }
-
-            apkList.add(apk);
-        }
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.apk_recycler);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new ApkViewDataAdapter(apkList);
-        mRecyclerView.setAdapter(mAdapter);
-        installSelected.setVisibility(View.VISIBLE);
-    }
-
     public void installSelected(View view)
     {
         installSelected.setEnabled(false);
@@ -205,7 +152,7 @@ public class InstallerActivity extends Activity {
         List<ApkFile> apkList = ((ApkViewDataAdapter) mAdapter).getSelectedApkList();
 
         for (int i = 0; i < apkList.size(); i++) {
-            File directory = Environment.getExternalStoragePublicDirectory("AceInstaller");
+            File directory = Environment.getExternalStoragePublicDirectory("AceInstallerApps");
             File file = new File(directory, apkList.get(i).getName());
             Uri fileUri = Uri.fromFile(file);
 
