@@ -91,7 +91,7 @@ public class InstallerActivity extends Activity {
 
     private void showApkList() {
 
-        root = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller"));
+        root = Environment.getExternalStoragePublicDirectory("AceInstaller");
         fileList = Utils.getApkFiles(root);
 
         if(fileList.size() < 1) {
@@ -101,21 +101,12 @@ public class InstallerActivity extends Activity {
             textView.setText("No Apk's Found in this Location");
             textView.setPadding(5, 5, 5, 5);
             view.addView(textView);
-
-            chooseFolder.setVisibility(View.VISIBLE);
-            chooseFolder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openDialog(v);
-                }
-            });
-            select_all.setVisibility(View.GONE);
         } else {
             for (int i = 0; i < fileList.size(); i++) {
                 ApkFile apk = new ApkFile(fileList.get(i).getName(), false);
-
                 String filePath = root.toString() + "/" + fileList.get(i).getName();
                 PackageInfo packageInfo = mContext.getPackageManager().getPackageArchiveInfo(filePath, PackageManager.GET_ACTIVITIES);
+
                 if(packageInfo != null) {
                     ApplicationInfo appInfo = packageInfo.applicationInfo;
                     if (Build.VERSION.SDK_INT >= 8) {
