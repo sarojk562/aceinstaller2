@@ -214,16 +214,8 @@ public class InstallerActivity extends Activity {
         List<ApkFile> apkList = ((ApkViewDataAdapter) mAdapter).getSelectedApkList();
 
         for (int i = 0; i < apkList.size(); i++) {
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//            Uri uri = Uri.fromFile(new File(root.toString() + "/" + apkList.get(i).getName()));
-//            intent.setDataAndType(uri, "application/vnd.android.package-archive");
-//            startActivity(Intent.createChooser(intent, "Your title"));
-
             File directory = Environment.getExternalStoragePublicDirectory("AceInstaller");
-
             File file = new File(directory, apkList.get(i).getName()); // assume refers to "sdcard/myapp_folder/myapp.apk"
-
-
             Uri fileUri = Uri.fromFile(file); //for Build.VERSION.SDK_INT <= 24
 
             if (Build.VERSION.SDK_INT >= 24) {
