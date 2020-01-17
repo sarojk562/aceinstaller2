@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">AceInstaller</string>
     <string-array name="packageNames">
-        <item name="0">com.poc.sarojkaashyap.college_poc</item>
-        <item name="1">com.erudex.mauritius.eduapp</item>
-        <item name="2">org.coolreader</item>
-        <item name="3">org.tuxpaint</item>
-        <item name="4">subreddit.android.appstore</item>
+        <item name="0">com.camerasideas.instashot</item>
+        <item name="1">org.scratchjr.android</item>
+        <item name="2">cn.wps.moffice_eng</item>
+        <item name="3">com.kotobee.readerapp</item>
+        <item name="4">com.qihoo.security</item>
+        <item name="5">air.fourdWhiteboard.debug</item>
+        <item name="6">com.erudex.eduapp.mauritius.qa</item>
+        <item name="7">com.sonymobile.sketch</item>
     </string-array>
 </resources>

@@ -88,7 +88,7 @@ public class AppListActivity extends AppCompatActivity {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
-
+            String test = "0";
         }
 
         return false;
