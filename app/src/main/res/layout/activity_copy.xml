@@ -13,16 +13,6 @@
         android:padding="8dp" >
     </LinearLayout>
 
-    <Button
-        android:id="@+id/chooseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Folder"
-        android:textSize="20sp"
-        android:visibility="gone"
-        android:layout_margin="16dp"
-        android:gravity="center"/>
-
     <TextView
         android:id="@+id/txtMessage"
         android:layout_width="fill_parent"

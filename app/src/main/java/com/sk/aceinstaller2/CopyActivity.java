@@ -37,17 +37,18 @@ public class CopyActivity extends AppCompatActivity {
 
     private static Button copyButton;
     private Context mContext;
-    private File root;
+    private File dataRoot;
+    private File apkRoot;
+
     private ArrayList<File> fileList = new ArrayList<File>();
+    private ArrayList<File> apkFileList = new ArrayList<File>();
     private LinearLayout view;
-    private Button chooseFolder;
 
     private TextView txtMessage =  null;
     private TextView countMessage = null;
     private ProgressBar mProgressBar =  null;
     private CopyWork task = null;
     private static final int MAX_PROGRESS = 100;
-    private int FOLDERPICKER_CODE = 0;
     private int total_file_count = 0;
     private int curr_file_count = 0;
 
@@ -71,7 +72,6 @@ public class CopyActivity extends AppCompatActivity {
         }
 
         view = (LinearLayout) findViewById(R.id.view);
-        chooseFolder = (Button) findViewById(R.id.chooseButton);
 
         txtMessage = (TextView) findViewById(R.id.txtMessage);
         countMessage = (TextView) findViewById(R.id.countMessage);
@@ -85,9 +85,10 @@ public class CopyActivity extends AppCompatActivity {
         // set an arbitrary max value for the progress bar
         mProgressBar.setMax(MAX_PROGRESS);
 
-        root = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller/mauritius_erudex"));
+        dataRoot = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller/mauritius_erudex"));
+        apkRoot = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller/apps"));
 
-        if(!root.isDirectory()) {
+        if(!dataRoot.isDirectory()) {
             txtMessage.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             copyButton.setVisibility(View.GONE);
@@ -96,15 +97,6 @@ public class CopyActivity extends AppCompatActivity {
             textView.setText("Erudex folder is not found in this Location");
             textView.setPadding(5, 5, 5, 5);
             view.addView(textView);
-
-            chooseFolder.setVisibility(View.VISIBLE);
-            chooseFolder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CopyActivity.this, FolderPicker.class);
-                    startActivityForResult(intent, FOLDERPICKER_CODE);
-                }
-            });
         }
 
         copyButton.setOnClickListener(new View.OnClickListener() {
@@ -113,27 +105,6 @@ public class CopyActivity extends AppCompatActivity {
                 start();
             }
         });
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == FOLDERPICKER_CODE && resultCode == Activity.RESULT_OK) {
-            String folderLocation = intent.getExtras().getString("data");
-            setNewRoot(folderLocation);
-        }
-    }
-
-    private void setNewRoot(String dir) {
-        root = new File(dir.concat("/mauritius_erudex"));
-        if(!root.isDirectory()) {
-            // do Nothing for now.
-        } else {
-            view.removeAllViews();
-            chooseFolder.setVisibility(View.GONE);
-
-            txtMessage.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.VISIBLE);
-            copyButton.setVisibility(View.VISIBLE);
-        }
     }
 
     private void copyFile(String inputPath, String inputFile, String outputPath) {
@@ -192,23 +163,17 @@ public class CopyActivity extends AppCompatActivity {
     }
 
     private Runnable updateTimerThread = new Runnable() {
-
         public void run() {
-
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
-
             updatedTime = timeSwapBuff + timeInMilliseconds;
 
             int secs = (int) (updatedTime / 1000);
             int mins = secs / 60;
             secs = secs % 60;
-//            int milliseconds = (int) (updatedTime % 1000);
             clockView.setText("" + mins + ":"
                     + String.format("%02d", secs));
-//                    + ":" + String.format("%0d", milliseconds));
             customHandler.postDelayed(this, 0);
         }
-
     };
 
     class CopyWork extends AsyncTask<Integer, Integer, Integer> {
@@ -230,15 +195,15 @@ public class CopyActivity extends AppCompatActivity {
             // get the initial parameters. For us, this is the initial bar progress = 0
             int progress = ((Integer[])params)[0];
 
-            fileList = Utils.getfiles(root);
-            total_file_count = Utils.getFileCount(root);
+            fileList = Utils.getfiles(dataRoot);
+            apkFileList = Utils.getApkFiles(apkRoot);
+            total_file_count = Utils.getFileCount(dataRoot) + Utils.getFileCount(apkRoot);
 
             int i = 0;
             do {
-                String inputPath = root.toString()+"/";
+                String inputPath = dataRoot.toString()+"/";
                 String fileName = fileList.get(i).getName();
                 String outputPath = getExternalStorageDirectory().getAbsolutePath().toString().concat("/mauritius_erudex/");
-
                 File f = new File(inputPath.concat(fileName));
 
                 if(f.isDirectory()) {
@@ -251,6 +216,24 @@ public class CopyActivity extends AppCompatActivity {
                 publishProgress(progress);
                 i++;
             } while (i < fileList.size());
+
+            int a = 0;
+            do {
+                String inputPath = apkRoot.toString()+"/";
+                String fileName = apkFileList.get(a).getName();
+                String outputPath = getExternalStorageDirectory().getAbsolutePath().toString().concat("/AceInstallerApps/");
+                File f = new File(inputPath.concat(fileName));
+
+                if(f.isDirectory()) {
+                    copyRec(inputPath, fileName, outputPath);
+                } else {
+                    copyFile(inputPath, fileName, outputPath);
+                }
+
+                progress = (a * 100) / apkFileList.size();
+                publishProgress(progress);
+                a++;
+            } while (a < apkFileList.size());
 
             return progress;
         }
