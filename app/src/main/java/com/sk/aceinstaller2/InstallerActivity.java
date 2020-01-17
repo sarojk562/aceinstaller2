@@ -14,6 +14,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.pm.ShortcutInfoCompat;
+import android.support.v4.content.pm.ShortcutManagerCompat;
+import android.support.v4.graphics.drawable.IconCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -170,27 +173,29 @@ public class InstallerActivity extends Activity {
 
         // Make sure you only run addShortcut() once, not to create duplicate shortcuts.
         if(!appSettings.getBoolean("apps_shortcut", false)) {
-            addAppsShortcut();
+            addAppsShortcut(mContext);
         }
     }
 
-    private void addAppsShortcut() {
-        //Adding shortcut for App List Activity
-        //on Home screen
-        Intent shortcutIntent = new Intent(getApplicationContext(), AppListActivity.class);
-        shortcutIntent.setAction(Intent.ACTION_MAIN);
+    public void addAppsShortcut(Context context)
+    {
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(context))
+        {
+            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, "#1")
+                    .setIntent(new Intent(context, AppListActivity.class).setAction(Intent.ACTION_MAIN)) // !!! intent's action must be set on oreo
+                    .setShortLabel("Erudex Education Apps")
+                    .setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut))
+                    .build();
+            ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
 
-        Intent addIntent = new Intent();
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Education Apps");
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_shortcut));
-
-        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        addIntent.putExtra("duplicate", false);  //may it's already there so   don't duplicate
-        getApplicationContext().sendBroadcast(addIntent);
-
-        SharedPreferences.Editor prefEditor = appSettings.edit();
-        prefEditor.putBoolean("apps_shortcut", true);
-        prefEditor.commit();
+            SharedPreferences.Editor prefEditor = appSettings.edit();
+            prefEditor.putBoolean("apps_shortcut", true);
+            prefEditor.commit();
+        }
+        else
+        {
+            // Shortcut is not supported by your launcher
+            Toast.makeText(context, "Couldn't add shortcut as it is not supported.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
