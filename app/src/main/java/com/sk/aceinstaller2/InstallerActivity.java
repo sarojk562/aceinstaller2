@@ -104,6 +104,8 @@ public class InstallerActivity extends Activity {
             textView.setText("No Apk's Found in this Location");
             textView.setPadding(5, 5, 5, 5);
             view.addView(textView);
+
+            select_all.setVisibility(View.GONE);
         } else {
             for (int i = 0; i < fileList.size(); i++) {
                 ApkFile apk = new ApkFile(fileList.get(i).getName(), false);
