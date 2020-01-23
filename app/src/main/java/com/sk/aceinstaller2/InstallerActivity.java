@@ -94,7 +94,7 @@ public class InstallerActivity extends Activity {
 
     private void showApkList() {
 
-        root = Environment.getExternalStoragePublicDirectory("AceInstallerApps");
+        root = Environment.getExternalStoragePublicDirectory("ErudexApps");
         fileList = Utils.getApkFiles(root);
 
         if(fileList.size() < 1) {
@@ -112,6 +112,7 @@ public class InstallerActivity extends Activity {
                 String filePath = root.toString() + "/" + fileList.get(i).getName();
                 PackageInfo packageInfo = mContext.getPackageManager().getPackageArchiveInfo(filePath, PackageManager.GET_ACTIVITIES);
 
+                apk.setPackageName(packageInfo.packageName);
                 if(packageInfo != null) {
                     ApplicationInfo appInfo = packageInfo.applicationInfo;
                     if (Build.VERSION.SDK_INT >= 8) {
@@ -157,7 +158,7 @@ public class InstallerActivity extends Activity {
         List<ApkFile> apkList = ((ApkViewDataAdapter) mAdapter).getSelectedApkList();
 
         for (int i = 0; i < apkList.size(); i++) {
-            File directory = Environment.getExternalStoragePublicDirectory("AceInstallerApps");
+            File directory = Environment.getExternalStoragePublicDirectory("ErudexApps");
             File file = new File(directory, apkList.get(i).getName());
             Uri fileUri = Uri.fromFile(file);
 
@@ -185,8 +186,8 @@ public class InstallerActivity extends Activity {
         {
             ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, "#1")
                     .setIntent(new Intent(context, AppListActivity.class).setAction(Intent.ACTION_MAIN)) // !!! intent's action must be set on oreo
-                    .setShortLabel("Erudex Education Apps")
-                    .setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut))
+                    .setShortLabel("Preloaded Applications")
+                    .setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut)) // Need to change the icon when kishore gives the icon - SarojK
                     .build();
             ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
 

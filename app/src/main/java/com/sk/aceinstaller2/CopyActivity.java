@@ -85,7 +85,7 @@ public class CopyActivity extends AppCompatActivity {
         // set an arbitrary max value for the progress bar
         mProgressBar.setMax(MAX_PROGRESS);
 
-        dataRoot = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller/mauritius_erudex"));
+        dataRoot = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller/Erudex"));
         apkRoot = new File(Utils.getStoragePath().getAbsolutePath().concat("/AceInstaller/apps"));
 
         if(!dataRoot.isDirectory()) {
@@ -203,7 +203,7 @@ public class CopyActivity extends AppCompatActivity {
             do {
                 String inputPath = dataRoot.toString()+"/";
                 String fileName = fileList.get(i).getName();
-                String outputPath = getExternalStorageDirectory().getAbsolutePath().toString().concat("/mauritius_erudex/");
+                String outputPath = getExternalStorageDirectory().getAbsolutePath().toString().concat("/Erudex/");
                 File f = new File(inputPath.concat(fileName));
 
                 if(f.isDirectory()) {
@@ -221,7 +221,7 @@ public class CopyActivity extends AppCompatActivity {
             do {
                 String inputPath = apkRoot.toString()+"/";
                 String fileName = apkFileList.get(a).getName();
-                String outputPath = getExternalStorageDirectory().getAbsolutePath().toString().concat("/AceInstallerApps/");
+                String outputPath = getExternalStorageDirectory().getAbsolutePath().toString().concat("/ErudexApps/");
                 File f = new File(inputPath.concat(fileName));
 
                 if(f.isDirectory()) {

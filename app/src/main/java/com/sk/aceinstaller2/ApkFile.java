@@ -9,11 +9,9 @@ public class ApkFile implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
-
+    private String packageName;
     private Drawable icon;
-
     private boolean isSelected;
-
     private boolean isInstalled;
 
     public ApkFile() {
@@ -48,6 +46,14 @@ public class ApkFile implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public Drawable getIcon() {
